@@ -1,3 +1,4 @@
+from decouple import config
 from flask import Flask, render_template, request
 from .models import DB, User
 
@@ -7,7 +8,7 @@ def create_app():
     app = Flask(__name__)
 
     #add our config
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+    app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
  
     #now have the database know about the app
