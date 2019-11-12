@@ -40,3 +40,19 @@ def clear_db():
     '''
     DB.drop_all()
     DB.create_all()
+
+# Function to add users to the DB without a for loop
+# def improved(twi_name, count=200, excl_reps=True, inc_retwt=False):
+#     '''
+#     Same as twitter_to_db method but without a for loop(should be faster!)
+#     Gets user and their (count) tweets from twitter user name
+#     And inputs them into database
+#     excl_reps = Exclude replies(default True)
+#     inc_retwt = Include retweets(default False)    
+#     EX: twitter_to_db('elonmusk')
+#     '''
+#     username = TWITTER.get_user(twi_name)
+#     tweets = username.timeline(count=count, exclude_replies=excl_reps, include_retweets=inc_retwt, tweet_mode='extended')
+#     db_user = User(id=username.id, name=username.screen_name, newest_tweet_id=tweets[0].id, number_followers=username.followers_count)
+#     embedding = BASILICA.embed_sentences(tweets.full_text, model='twitter')
+#     # FIGURE OUT WHAT THIS DOES!db_user.tweets.extend()
