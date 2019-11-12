@@ -12,7 +12,7 @@ TWITTER_AUTH.set_access_token(config('TWITTER_ACCESS_TOKEN'),
 TWITTER = tweepy.API(TWITTER_AUTH)
 BASILICA = basilica.Connection(config('BASILICA_KEY'))
 
-#add more functions here
+# Function to add users to the DB
 def twitter_to_db(twi_name, count=200, excl_reps=True, inc_retwt=False):
     '''
     Gets user and their (count) tweets from twitter user name
@@ -23,7 +23,7 @@ def twitter_to_db(twi_name, count=200, excl_reps=True, inc_retwt=False):
     '''
     username = TWITTER.get_user(twi_name)
     tweets = username.timeline(count=count, exclude_replies=excl_reps, include_retweets=inc_retwt, tweet_mode='extended')
-    db_user = User(id=username.id, name=username.screen_name, newest_tweet_id=tweets[0].id)
+    db_user = User(id=username.id, name=username.screen_name, newest_tweet_id=tweets[0].id, number_followers=username.followers_count)
     for i in tweets:
         embedding = BASILICA.embed_sentence(i.full_text, model='twitter')
         db_tweet = Tweet(id=i.id, text=i.full_text[:500], embedding=embedding)
@@ -33,6 +33,7 @@ def twitter_to_db(twi_name, count=200, excl_reps=True, inc_retwt=False):
     DB.session.add(db_user)
     DB.session.commit()
 
+# Function to clear the DB and reset it
 def clear_db():
     '''
     Drop all data from db.sqlite3 and create new
