@@ -8,7 +8,7 @@ from .twitter import BASILICA
 
 def predict_user(user1_name, user2_name, tweet_text, cache=None):
     '''Determine and return which user is more likely to tweet given phrase'''
-    user_set = pickle.dump((user1_name, user2_name))
+    user_set = pickle.dumps((user1_name, user2_name))
     if cache and cach.exists(user_set):
         log_reg = pickle.loads(cache.get(user_set))
     else:
@@ -19,7 +19,7 @@ def predict_user(user1_name, user2_name, tweet_text, cache=None):
         user1_embeddings = np.array([tweet.embedding for tweet in user1.tweets])
         user2_embeddings = np.array([tweet.embedding for tweet in user2.tweets])
         # split those into an array
-        embedding = np.vstack([user1_embeddings, user2_embeddings])
+        embeddings = np.vstack([user1_embeddings, user2_embeddings])
         labels = np.concatenate([np.ones(len(user1.tweets)),
                                  np.zeros(len(user2.tweets))])
         # Fit model
