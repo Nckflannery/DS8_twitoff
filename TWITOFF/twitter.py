@@ -79,27 +79,31 @@ def add_or_update_user(username):
 
 
 # Function to add users to the DB without a for loop
-def improved(twi_name, count=200, excl_reps=True, inc_retwt=False):
+def improved(twi_name):
     '''
-    Same as twitter_to_db method but without a for loop(should be faster!)
+    Same as twitter_to_db method but using embed_sentences rather than for loop
+    to increase speed!
     Gets user and their (count) tweets from twitter user name
     And inputs them into database
     excl_reps = Exclude replies(default True)
     inc_retwt = Include retweets(default False)
-    EX: twitter_to_db('elonmusk')
+    EX: improved('elonmusk')
     '''
     username = TWITTER.get_user(twi_name)
-    tweets = username.timeline(count=count, exclude_replies=excl_reps,
-                               include_retweets=inc_retwt,
+    tweets = username.timeline(count=200, exclude_replies=True,
+                               include_retweets=False,
                                tweet_mode='extended')
     db_user = User(id=username.id, name=username.screen_name,
                    newest_tweet_id=tweets[0].id,
                    number_followers=username.followers_count)
+    DB.session.add(db_user)
     embeddings = BASILICA.embed_sentences([tweet.full_text for tweet in
                                           tweets], model='twitter')
     tweet_list = []
-    for i in rand(len(tweet_list)):
-        db_tweet = Tweet(id=tweets[i].id, text=tweest[i].full_text,
+    for i in range(len(tweets)):
+        db_tweet = Tweet(id=tweets[i].id, text=tweets[i].full_text,
                          embedding=embeddings[i])
         tweet_list.append(db_tweet)
-    db_user.extend(tweet_list)
+        DB.session.add(db_tweet)
+    db_user.tweets.extend(tweet_list)
+    DB.session.commit()

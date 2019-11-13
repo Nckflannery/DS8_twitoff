@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from .models import DB, User
 from .predict import predict_user
-from .twitter import add_or_update_user
+from .twitter import improved
 
 # Load dotenv
 load_dotenv()
@@ -33,7 +33,7 @@ def create_app():
         name = name or request.values['user_name']
         try:
             if request.method == 'POST':
-                add_or_update_user(name)
+                improved(name)
                 message = f'User {name} sucessfully added!'
             tweets = User.query.filter(User.name == name).one().tweets
         except Exception as e:
