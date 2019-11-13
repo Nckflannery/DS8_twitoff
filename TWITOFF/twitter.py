@@ -97,13 +97,12 @@ def improved(twi_name):
                    newest_tweet_id=tweets[0].id,
                    number_followers=username.followers_count)
     DB.session.add(db_user)
-    embeddings = BASILICA.embed_sentences([tweet.full_text for tweet in
-                                          tweets], model='twitter')
-    tweet_list = []
-    for i in range(len(tweets)):
-        db_tweet = Tweet(id=tweets[i].id, text=tweets[i].full_text,
-                         embedding=embeddings[i])
-        tweet_list.append(db_tweet)
-        DB.session.add(db_tweet)
-    db_user.tweets.extend(tweet_list)
+    tweet_text , tweet_id = zip(*[(t.full_text, t.id) for t in tweets])
+    embeddings = BASILICA.embed_sentences(tweet_text, model='twitter')
+    tweet_list = list(zip(tweet_id, tweet_text, embeddings))
+    tweet_objects = [Tweet(id=t[0], text=t[1][:500], embedding=t[2])
+                     for t in tweet_list]
+    for i in tweet_objects:
+        DB.session.add(i)
+    db_user.tweets.extend(tweet_objects)
     DB.session.commit()
