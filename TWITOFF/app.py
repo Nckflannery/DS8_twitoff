@@ -1,6 +1,7 @@
 from decouple import config
 from flask import Flask, render_template, request
 from .models import DB, User
+from .twitter import add_or_update_user
 
 #now we make a app factory
 
@@ -31,7 +32,7 @@ def create_app():
             tweets = User.query.filter(User.name == name).one().tweets
         except Exception as e:
             message = f'Error adding {name}: {e}'
-            tweest = []
+            tweets = []
         return render_template('user.html', title=name, tweets=tweets,
                                message=message)
 
