@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 # import database. Capital for global scope
 DB = SQLAlchemy()
 
+
 class User(DB.Model):
     '''Twitter users that we analyze'''
     id = DB.Column(DB.Integer, primary_key=True)
@@ -12,8 +13,10 @@ class User(DB.Model):
     newest_tweet_id = DB.Column(DB.BigInteger)
     number_followers = DB.Column(DB.BigInteger)
 
+
 def __repr__(self):
     return '<User {}>'.format(self.name)
+
 
 class Tweet(DB.Model):
     '''User's tweets from twitter'''
@@ -23,6 +26,7 @@ class Tweet(DB.Model):
     user = DB.relationship('User', backref=DB.backref('tweets', lazy=True))
 
     embedding = DB.Column(DB.PickleType, nullable=False)
+
 
 def __repr__(self):
     return '<Tweet {}>'.format(self.text)
