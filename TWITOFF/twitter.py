@@ -55,7 +55,8 @@ def add_or_update_user(username):
     try:
         twitter_user=TWITTER.get_user(username)
         db_user=(User.query.get(twitter_user.id) or
-                 User(id=twitter_user.id, name=username))
+                 User(id=twitter_user.id, name=twitter_user.screen_name,
+                      number_followers=twitter_user.followers_count))
         DB.session.add(db_user)
         tweets=twitter_user.timeline(count=200, exclude_replies=True,
                                      include_retweets=False,
