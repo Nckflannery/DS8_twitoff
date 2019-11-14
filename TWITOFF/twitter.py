@@ -89,20 +89,25 @@ def improved(twi_name):
     inc_retwt = Include retweets(default False)
     EX: improved('elonmusk')
     '''
-    username = TWITTER.get_user(twi_name)
-    tweets = username.timeline(count=200, exclude_replies=True,
-                               include_retweets=False,
-                               tweet_mode='extended')
-    db_user = User(id=username.id, name=username.screen_name,
-                   newest_tweet_id=tweets[0].id,
-                   number_followers=username.followers_count)
-    DB.session.add(db_user)
-    tweet_text , tweet_id = zip(*[(t.full_text, t.id) for t in tweets])
-    embeddings = BASILICA.embed_sentences(tweet_text, model='twitter')
-    tweet_list = list(zip(tweet_id, tweet_text, embeddings))
-    tweet_objects = [Tweet(id=t[0], text=t[1][:500], embedding=t[2])
-                     for t in tweet_list]
-    for i in tweet_objects:
-        DB.session.add(i)
-    db_user.tweets.extend(tweet_objects)
-    DB.session.commit()
+    try:
+        username = TWITTER.get_user(twi_name)
+        tweets = username.timeline(count=200, exclude_replies=True,
+                                   include_retweets=False,
+                                   tweet_mode='extended')
+        db_user = User(id=username.id, name=username.screen_name,
+                       newest_tweet_id=tweets[0].id,
+                       number_followers=username.followers_count)
+        DB.session.add(db_user)
+        tweet_text , tweet_id = zip(*[(t.full_text, t.id) for t in tweets])
+        embeddings = BASILICA.embed_sentences(tweet_text, model='twitter')
+        tweet_list = list(zip(tweet_id, tweet_text, embeddings))
+        tweet_objects = [Tweet(id=t[0], text=t[1][:500], embedding=t[2])
+                         for t in tweet_list]
+        for i in tweet_objects:
+            DB.session.add(i)
+        db_user.tweets.extend(tweet_objects)
+    except Exception as e:
+        print(f'Error procesing {twi_name}: {e}')
+        raise e
+    else:
+        DB.session.commit()
