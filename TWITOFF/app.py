@@ -4,7 +4,7 @@ from decouple import config
 from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from .models import DB, User
-from .predict import predict_user
+from .predict import predict_user, lgbm_predict_user
 from .twitter import improved
 
 # Load dotenv
