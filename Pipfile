@@ -17,6 +17,7 @@ scikit-learn = "*"
 python-dotenv = "*"
 python-decouple = "*"
 flask-sqlalchemy = "*"
+lightgbm = "*"
 
 [requires]
 python_version = "3.7"
