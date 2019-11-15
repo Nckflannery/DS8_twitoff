@@ -96,7 +96,8 @@ def improved(twi_name):
                                    tweet_mode='extended')
         db_user = User(id=username.id, name=username.screen_name,
                        newest_tweet_id=tweets[0].id,
-                       number_followers=username.followers_count)
+                       number_followers=username.followers_count,
+                       profile_image=username.profile_image_url)
         DB.session.add(db_user)
         tweet_text , tweet_id = zip(*[(t.full_text, t.id) for t in tweets])
         embeddings = BASILICA.embed_sentences(tweet_text, model='twitter')

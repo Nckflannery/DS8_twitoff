@@ -12,6 +12,7 @@ class User(DB.Model):
     name = DB.Column(DB.String(20), nullable=False)
     newest_tweet_id = DB.Column(DB.BigInteger)
     number_followers = DB.Column(DB.BigInteger)
+    profile_image = DB.Column(DB.Unicode(500))
 
 
 def __repr__(self):
@@ -21,7 +22,7 @@ def __repr__(self):
 class Tweet(DB.Model):
     '''User's tweets from twitter'''
     id = DB.Column(DB.BigInteger, primary_key=True)
-    text = DB.Column(DB.Unicode(300))
+    text = DB.Column(DB.Unicode(500))
     user_id = DB.Column(DB.BigInteger, DB.ForeignKey('user.id'), nullable=False)
     user = DB.relationship('User', backref=DB.backref('tweets', lazy=True))
 

@@ -40,6 +40,7 @@
         <ul>
             {% for user in users %}
             <li>
+                <img src='{{ user.profile_image }}'>
                 {{ user.name }} followers: {{ user.number_followers }}
             </li>
             {% endfor %}
